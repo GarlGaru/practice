@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<style>
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+    .pokeBorder {
+        width: 300px;
+        height: auto;
+        background-color: white;
+        outline: 1px solid black;
+        padding: 20px;
+    }
+    .pokeBorder img{
+        width: auto;
+        height: auto;
+        align-items: left;
+    }
+    .detail{
+        display: flex;
+        text-align: left;
+        align-items: center;
+    }
+</style>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const {useState, useEffect } = React;
+
+        function PokeCard() {
+            const [pokeNames, setPokeNames] = useState([]);
+            useEffect(() => {
+                fetch('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=20')
+                    .then(response => response.json())
+                    .then(json => {
+                        const names = json.results.map(result=> result.name)
+                        setPokeNames(names);
+                    });
+            }, []);
+
+            return (
+                <>
+                {pokeNames.map((name, index) => (
+                    <div key={index} className="pokeBorder">
+                        <Details pokeName = {name}/>
+                    </div>
+                ))}
+                </>
+            )
+        }
+
+        function Details(name){
+            const pokeName = name.pokeName;
+            const imgUrl = `https://pokeapi.co/api/v2/pokemon/${pokeName}`;
+            const [pokemon, setPokemon] = useState([]);
+            const [pokeId, setPokeId] = useState([]);
+            const [sprites, setSprites] = useState([]);
+
+            useEffect(() => {
+                fetch(imgUrl)
+                    .then(response => response.json())
+                    .then(json => {
+                        // console.log(json);
+                        setPokemon(json);
+                        setPokeId(json.id);
+                        setSprites(json.sprites.front_default);
+                    });
+            }, []);
+
+            return (
+                <>
+                    <div className="detail">
+                        <img src = {sprites}/>
+                        <div>
+                            <h2>No. {pokeId}</h2>
+                            <h3>name : {pokeName}</h3>
+                        </div>
+                    </div>
+                </>
+            )
+        }
+
+
+        function App(){
+            return(
+            <>
+                <h1>포켓몬 목록</h1>
+                <div className = "container">
+                    <PokeCard/>
+                </div>
+                
+            </>
+            )
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+    </script>
+</body>
+</html>

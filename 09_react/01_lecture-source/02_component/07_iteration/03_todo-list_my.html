@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <title>Document</title>
+</head>
+<style>
+  .Title {
+    background-color: black;
+    padding: 5px;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+
+  .FontColor {
+    color: white;
+    font-family: "BM Jua";
+    font-size: 20px;
+  }
+
+  .NameTitle {
+    text-align: center;
+    font-family: "Al Bayan";
+    margin-top: 60px;
+  }
+
+  .BackGroundColor {
+    background-color: #d9d9d9;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 60px;
+  }
+
+  .ListDisPlayTop {
+    background-color: white;
+    border: 2px solid black;
+    width: 500px;
+    height: 500px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .ButtonStyle {
+    background-color: green;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+
+  .InputTop {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .List {
+    width: 100%;
+    overflow-y: auto;
+  }
+
+  .RemoveButton {
+    background-color: red;
+    color: white;
+    font-size: 10px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .completed {
+    text-decoration: line-through;
+  }
+
+  .FooterStyle {
+    background-color: black;
+    color: white;
+    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+  }
+</style>
+<body>
+<div id="root"></div>
+<body>
+  
+  <div id="root"></div>
+  <script type="text/babel">
+
+    const {useState} = React;
+
+    function App() {
+      
+      const today = new Date();
+      const formattedDate = `${today.getFullYear()}. ${String(today.getMonth() + 1).padStart(2, '0')}. ${String(today.getDate()).padStart(2, '0')}.`;
+      
+      const [works, setWorks] = useState([
+          {id: 1, name: '다이소에서 전기모기채', completed: false },
+          {id: 2, name: '올때 메로나', completed: false },
+          {id: 3, name: '세탁물 건조 시키기', completed: false }
+      ]);
+
+      const onChecked = id =>{
+        setWorks(works.map(work=>
+          work.id === id ? { ...work, completed: !work.completed } : work
+          )
+        )
+      }
+      const onRemove = id => {
+        const work = works.find(todo => todo.id === id);
+        if(work.completed){
+          const changedWorks = works.filter(work => work.id !== id);
+          setWorks(changedWorks);
+        }else{
+          alert('먼저 완료해야합니다')
+        }
+      }
+
+      const todoList = works.map(work =>
+        <div>
+          <input type = "checkbox"
+          checked={work.completed}
+          onChange={() => onChecked(work.id)}
+          />
+          <span className={work.completed ? 'completed' : 'not-completed'}>
+            {work.name} 
+          </span>
+          <button className="RemoveButton" onClick={() => onRemove(work.id)}>X</button>
+        </div>
+      );
+
+      
+      const [inputText, setInputText] = useState('');
+      const [nextId, setNextId] = useState(4);
+
+      const onChangeHandler = e => setInputText(e.target.value);
+      const onClickHandler = () => {
+
+        const changedWorks = works.concat({
+            id: nextId,
+            name: inputText
+        });
+        setNextId(nextId + 1);
+        setWorks(changedWorks);
+        setInputText('');
+      }
+
+      return (
+        <>
+          <div className="Title">
+            <h3 className="FontColor">오늘의 할일! {formattedDate}</h3>
+          </div>
+
+          <div className="BackGroundColor">
+            <h2 className="NameTitle">Todo-List</h2>
+              <div className="ListDisPlayTop">
+                <div className="List">
+                  {todoList}
+                </div>
+              </div>
+            <div className="InputTop">
+              <input onChange={onChangeHandler} value={inputText}/>
+              <button onClick={onClickHandler}>추가</button>
+            </div>
+          </div>
+
+          <footer className="FooterStyle">
+            <h9>Copyright 2022, team-greedy all rights reserved.</h9>
+          </footer>
+          
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>
