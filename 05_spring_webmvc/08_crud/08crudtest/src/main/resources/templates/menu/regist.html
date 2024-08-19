@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>regist</title>
+</head>
+<body>
+    <h3>메뉴추가</h3>
+    <form action="/menu/regist" method="post">
+        <label>이름</label><input type="text" name="name" ><br>
+        <label>가격</label><input type="number" name="price"><br>
+        <label>카테고리</label>
+        <select name="categoryCode">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+        </select>
+        <br>
+        <label>주문가능여부</label>
+        <select name="orderableStaus">
+            <option value="Y">Y</option>
+            <option value="N">N</option>
+        </select><br>
+        <input type="submit"/>
+
+    </form>
+
+</body>
+</html>
